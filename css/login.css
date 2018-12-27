@@ -1,0 +1,137 @@
+#header>div#nav_header{
+    border-bottom:2px solid #ddd;
+}
+div#nav_header >div.nav >a{
+    color:#000 !important;
+}
+#section{
+    height:700px;
+    background:#0b0b0b url(../img/login/notice_thumbnail_1527560471740.jpg) no-repeat;
+    background-size:cover;
+    margin:150px 0;
+}
+div#login{
+    width:250px;
+    height:300px;
+    background:rgba(48,48,49,0.1);
+    position:relative;
+    animation:mymove 10s infinite;/*animation:动画 infinite:无穷的 表示mymove这个动画永远以8秒循环动作*/
+    animation-timing-function:linear;
+    padding:8px;
+    background:url("../img/login/bg_header.jpg") no-repeat -140px -15px;
+    background-size:cover;
+    border-radius: 10px;
+    box-shadow: 5px 5px 20px #565555;
+}
+div#login:after{
+    content:"登录窗口";
+    display: block;
+    width:245px;
+    padding:12px;
+    text-align:center;
+    background-image:linear-gradient(to bottom,rgb(50,50,50),rgb(25,25,25));
+    border:0;
+    color:white;
+    position: absolute;
+    top:270px;
+    left:10px;
+    box-sizing: border-box;
+}
+@media screen and (min-width:1367px){
+    @keyframes mymove{/*设置一个动画 语法：@keyframes animationname{
+			0%{style}~100%{style}  百分数表示动画时间的表分数
+		}*/
+        0%{top:0px;left:0px;background-color:rgba(48,48,49,0.1)}
+        25%{top:0px;left:800px;background-color:rgba(48,48,49,0.7)}
+        50%{top:0px;left:1600px;background-color:rgba(48,48,49,0.1)}
+        70%{top:220px;left:800px;background-color:rgba(48,48,49,0.7)}
+        100%{top:0px;left:0px;background-color:rgba(48,48,49,0.1)}
+    }
+}
+@media screen and (min-width:1280px) and (max-width:1366px){
+    @keyframes mymove{/*设置一个动画 语法：@keyframes animationname{
+			0%{style}~100%{style}  百分数表示动画时间的表分数
+		}*/
+        0%{top:0px;left:0px;background-color:rgba(48,48,49,0.1)}
+        25%{top:0px;left:500px;background-color:rgba(48,48,49,0.7)}
+        50%{top:0px;left:1094px;background-color:rgba(48,48,49,0.1)}
+        70%{top:220px;left:500px;background-color:rgba(48,48,49,0.7)}
+        100%{top:0px;left:0px;background-color:rgba(48,48,49,0.1)}
+
+    }
+}
+div#login:hover{
+    animation-play-state:paused;/*animation-play-state 表示动画运行时的状态（是否正在运行还是暂停）  paused:暂停动画   running:运行动画*/
+}
+ul.login_list{
+    display: none;
+    margin-top:20px;
+}
+div#login:hover ul.login_list{
+    display: block;
+}
+div#login:hover:after{
+    content:"";
+    width:0;
+    height:0;
+    padding:0;
+    margin:0;
+}
+ul.login_list>li{
+    margin:23px 0px;
+}
+ul.login_list>li a{
+    text-decoration:none;
+    font-size:10px;
+}
+ul.login_list>li a:link{
+    color:white;
+}
+ul.login_list>li a:visited{
+    color:white;
+}
+ul.login_list>li p{
+    width:230px;
+    height:20px;
+    border-bottom:1px solid white;
+    padding-bottom:10px;
+}
+span#login_s{
+    color:white;
+    font-size:18px;
+}
+a#register_a{
+	float:right;
+}
+a#forget_a{
+	float:right;
+}
+input.text{
+    width:222px;
+    font-size:13px;
+    padding:12px;
+    border:0;
+    background-color: #fff;
+}
+input.text:focus{
+    outline:0;
+}
+#login_label{
+    font-size:12px;
+    color:white;
+    position:relative;
+    bottom:-8px;
+    right:-12px;
+}
+#login_auto{
+    position:relative;
+    right:-10px;
+    bottom:-10px;
+}
+#login_button{
+    width:245px;
+    padding:12px;
+    background-image:linear-gradient(to bottom,rgb(50,50,50),rgb(25,25,25));
+    border:0;
+    color:white;
+}

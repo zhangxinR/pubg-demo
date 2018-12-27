@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,pre,input{
+			margin:0;
+			padding:0;
+		}
+		header{
+			height:150px;
+		}
+		section{
+			height:600px;
+			background:url(register/bg.png) repeat-x;
+		}
+		div{
+			width:250px;
+			height:300px;
+			background:rgba(48,48,49,0.1);
+			position:relative;
+			animation:mymove 10s infinite;/*animation:动画 infinite:无穷的 表示mymove这个动画永远以8秒循环动作*/
+			animation-timing-function:linear;
+			padding:8px;
+		}
+		@keyframes mymove{/*设置一个动画 语法：@keyframes animationname{
+			0%{style}~100%{style}  百分数表示动画时间的表分数
+		}*/
+			0%{top:0px;left:0px;background:rgba(48,48,49,0.1)}
+			25%{top:0px;left:800px;background:rgba(48,48,49,0.7)}
+			50%{top:0px;left:1600px;background:rgba(48,48,49,0.1)}
+			70%{top:220px;left:800px;background:rgba(48,48,49,0.7)}
+			100%{top:0px;left:0px;background:rgba(48,48,49,0.1)}
+
+		}
+		div:hover{
+			animation-play-state:paused;/*animation-play-state 表示动画运行时的状态（是否正在运行还是暂停）  paused:暂停动画   running:运行动画*/
+		}
+		li{
+			margin:23px 0px;
+		}
+		a{
+			text-decoration:none;
+			font-size:10px;
+		}
+		a:link{
+			color:white;
+		}
+		a:visited{
+			color:white;
+		}
+		p{	
+			width:230px;
+			height:20px;
+			border-bottom:1px solid white;
+			padding-bottom:10px;
+		}
+		span,a,label{
+			font-family:"simhei";	
+
+		}
+		span#login_s{
+			color:white;
+			font-size:18px;
+		}
+		a#register_a{
+			position:relative;
+			right:-74px;
+		}
+		a#forget_a{
+			position:relative;
+			right:-118px;
+		}
+		input.text{
+			width:222px;
+			font-size:13px;
+			padding:12px;
+			border:0;
+		}
+		input.text:focus{
+			outline:0;
+		}
+		#text1{
+			background:url(register/yhm.png) white no-repeat;
+			background-position:95% 50%;
+		}
+		#text2{
+			background:url(register/mm.png) white no-repeat 95% 50%;
+		}
+		label{
+			font-size:12px;
+			color:white;
+			position:relative;
+			bottom:-8px;
+			right:-12px;
+		}
+		#login_auto{
+			position:relative;
+			right:-10px;
+			bottom:-10px;
+		}
+		#login_button{
+			width:245px;
+			padding:12px;
+			background:#27b0f6;
+			border:0;
+			color:white;
+		}
+	</style>
+</head>
+<body>
+	<header></header>
+	<section>
+		<div>
+			<form action="">
+				<ul type="none">
+					<table></table>
+					<li>
+						<p>
+							<span id="login_s">登录学子商城</span>
+							<a href="#" id="register_a">新用户注册</a>
+						</p>
+					</li>
+					<li>
+						<input type="text"	placeholder="请输出您的用户名" class="text" id="text1">
+					</li>
+					<li>
+						<input type="password" placeholder="请输入您的密码" class="text" id="text2">
+					</li>
+					<li>
+						<input type="checkbox" id="login_auto"><label for="login_auto">自动登录</label>
+						<a href="#" id="forget_a">忘记密码？</a>
+					</li>
+					<li>
+						<input type="button" value="登录" id="login_button">
+					</li>
+				</ul>
+			</form>
+		</div>
+	</section>
+	<footer></footer>
+</body>
+</html>

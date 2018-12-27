@@ -1,0 +1,680 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(21);
+
+
+/***/ },
+
+/***/ 5:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/**
+	 * Merge two attribute objects giving precedence
+	 * to values in object `b`. Classes are special-cased
+	 * allowing for arrays and merging/joining appropriately
+	 * resulting in a string.
+	 *
+	 * @param {Object} a
+	 * @param {Object} b
+	 * @return {Object} a
+	 * @api private
+	 */
+
+	exports.merge = function merge(a, b) {
+	  if (arguments.length === 1) {
+	    var attrs = a[0];
+	    for (var i = 1; i < a.length; i++) {
+	      attrs = merge(attrs, a[i]);
+	    }
+	    return attrs;
+	  }
+	  var ac = a['class'];
+	  var bc = b['class'];
+
+	  if (ac || bc) {
+	    ac = ac || [];
+	    bc = bc || [];
+	    if (!Array.isArray(ac)) ac = [ac];
+	    if (!Array.isArray(bc)) bc = [bc];
+	    a['class'] = ac.concat(bc).filter(nulls);
+	  }
+
+	  for (var key in b) {
+	    if (key != 'class') {
+	      a[key] = b[key];
+	    }
+	  }
+
+	  return a;
+	};
+
+	/**
+	 * Filter null `val`s.
+	 *
+	 * @param {*} val
+	 * @return {Boolean}
+	 * @api private
+	 */
+
+	function nulls(val) {
+	  return val != null && val !== '';
+	}
+
+	/**
+	 * join array as classes.
+	 *
+	 * @param {*} val
+	 * @return {String}
+	 */
+	exports.joinClasses = joinClasses;
+	function joinClasses(val) {
+	  return (Array.isArray(val) ? val.map(joinClasses) :
+	    (val && typeof val === 'object') ? Object.keys(val).filter(function (key) { return val[key]; }) :
+	    [val]).filter(nulls).join(' ');
+	}
+
+	/**
+	 * Render the given classes.
+	 *
+	 * @param {Array} classes
+	 * @param {Array.<Boolean>} escaped
+	 * @return {String}
+	 */
+	exports.cls = function cls(classes, escaped) {
+	  var buf = [];
+	  for (var i = 0; i < classes.length; i++) {
+	    if (escaped && escaped[i]) {
+	      buf.push(exports.escape(joinClasses([classes[i]])));
+	    } else {
+	      buf.push(joinClasses(classes[i]));
+	    }
+	  }
+	  var text = joinClasses(buf);
+	  if (text.length) {
+	    return ' class="' + text + '"';
+	  } else {
+	    return '';
+	  }
+	};
+
+
+	exports.style = function (val) {
+	  if (val && typeof val === 'object') {
+	    return Object.keys(val).map(function (style) {
+	      return style + ':' + val[style];
+	    }).join(';');
+	  } else {
+	    return val;
+	  }
+	};
+	/**
+	 * Render the given attribute.
+	 *
+	 * @param {String} key
+	 * @param {String} val
+	 * @param {Boolean} escaped
+	 * @param {Boolean} terse
+	 * @return {String}
+	 */
+	exports.attr = function attr(key, val, escaped, terse) {
+	  if (key === 'style') {
+	    val = exports.style(val);
+	  }
+	  if ('boolean' == typeof val || null == val) {
+	    if (val) {
+	      return ' ' + (terse ? key : key + '="' + key + '"');
+	    } else {
+	      return '';
+	    }
+	  } else if (0 == key.indexOf('data') && 'string' != typeof val) {
+	    if (JSON.stringify(val).indexOf('&') !== -1) {
+	      console.warn('Since Jade 2.0.0, ampersands (`&`) in data attributes ' +
+	                   'will be escaped to `&amp;`');
+	    };
+	    if (val && typeof val.toISOString === 'function') {
+	      console.warn('Jade will eliminate the double quotes around dates in ' +
+	                   'ISO form after 2.0.0');
+	    }
+	    return ' ' + key + "='" + JSON.stringify(val).replace(/'/g, '&apos;') + "'";
+	  } else if (escaped) {
+	    if (val && typeof val.toISOString === 'function') {
+	      console.warn('Jade will stringify dates in ISO form after 2.0.0');
+	    }
+	    return ' ' + key + '="' + exports.escape(val) + '"';
+	  } else {
+	    if (val && typeof val.toISOString === 'function') {
+	      console.warn('Jade will stringify dates in ISO form after 2.0.0');
+	    }
+	    return ' ' + key + '="' + val + '"';
+	  }
+	};
+
+	/**
+	 * Render the given attributes object.
+	 *
+	 * @param {Object} obj
+	 * @param {Object} escaped
+	 * @return {String}
+	 */
+	exports.attrs = function attrs(obj, terse){
+	  var buf = [];
+
+	  var keys = Object.keys(obj);
+
+	  if (keys.length) {
+	    for (var i = 0; i < keys.length; ++i) {
+	      var key = keys[i]
+	        , val = obj[key];
+
+	      if ('class' == key) {
+	        if (val = joinClasses(val)) {
+	          buf.push(' ' + key + '="' + val + '"');
+	        }
+	      } else {
+	        buf.push(exports.attr(key, val, false, terse));
+	      }
+	    }
+	  }
+
+	  return buf.join('');
+	};
+
+	/**
+	 * Escape the given string of `html`.
+	 *
+	 * @param {String} html
+	 * @return {String}
+	 * @api private
+	 */
+
+	var jade_encode_html_rules = {
+	  '&': '&amp;',
+	  '<': '&lt;',
+	  '>': '&gt;',
+	  '"': '&quot;'
+	};
+	var jade_match_html = /[&<>"]/g;
+
+	function jade_encode_char(c) {
+	  return jade_encode_html_rules[c] || c;
+	}
+
+	exports.escape = jade_escape;
+	function jade_escape(html){
+	  var result = String(html).replace(jade_match_html, jade_encode_char);
+	  if (result === '' + html) return html;
+	  else return result;
+	};
+
+	/**
+	 * Re-throw the given `err` in context to the
+	 * the jade in `filename` at the given `lineno`.
+	 *
+	 * @param {Error} err
+	 * @param {String} filename
+	 * @param {String} lineno
+	 * @api private
+	 */
+
+	exports.rethrow = function rethrow(err, filename, lineno, str){
+	  if (!(err instanceof Error)) throw err;
+	  if ((typeof window != 'undefined' || !filename) && !str) {
+	    err.message += ' on line ' + lineno;
+	    throw err;
+	  }
+	  try {
+	    str = str || __webpack_require__(6).readFileSync(filename, 'utf8')
+	  } catch (ex) {
+	    rethrow(err, null, lineno)
+	  }
+	  var context = 3
+	    , lines = str.split('\n')
+	    , start = Math.max(lineno - context, 0)
+	    , end = Math.min(lines.length, lineno + context);
+
+	  // Error context
+	  var context = lines.slice(start, end).map(function(line, i){
+	    var curr = i + start + 1;
+	    return (curr == lineno ? '  > ' : '    ')
+	      + curr
+	      + '| '
+	      + line;
+	  }).join('\n');
+
+	  // Alter exception message
+	  err.path = filename;
+	  err.message = (filename || 'Jade') + ':' + lineno
+	    + '\n' + context + '\n\n' + err.message;
+	  throw err;
+	};
+
+	exports.DebugItem = function DebugItem(lineno, filename) {
+	  this.lineno = lineno;
+	  this.filename = filename;
+	}
+
+
+/***/ },
+
+/***/ 6:
+/***/ function(module, exports) {
+
+	/* (ignored) */
+
+/***/ },
+
+/***/ 21:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var LanguageSelector = __webpack_require__(22);
+
+	var Lightbox = function (_LanguageSelector) {
+	    _inherits(Lightbox, _LanguageSelector);
+
+	    function Lightbox(elem, props) {
+	        _classCallCheck(this, Lightbox);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Lightbox).call(this, elem, props));
+
+	        _this.utils.addEvent('keyup', document, function (e) {
+	            if (e.keyCode == 27 && _this.shown) {
+	                e.stopPropagation();
+	                e.preventDefault();
+	                _this.hide();
+	            }
+	        });
+
+	        return _this;
+	    }
+
+	    _createClass(Lightbox, [{
+	        key: 'runTemplate',
+	        value: function runTemplate() {
+	            var _this2 = this;
+
+	            this.elem = document.createElement('div');
+	            this.elem.className = 'lightbox-ls dropdown open notranslate';
+	            //this.elem.style.visibility = 'hidden';
+	            document.body.appendChild(this.elem);
+
+	            this.overlay = new window.Trex.language_selectors['_overlay']();
+	            this.overlay.toggleOverlay(true);
+	            this.overlay.toggleAttention(true);
+	            this.props.opts.inline = Trex.auth.isInlineEnabled();
+	            //delete this.props.opts.inline;
+	            this.elem.innerHTML = this.template(this.props);
+
+	            this.addEvent('click', 'close', this.elem.querySelectorAll('.tml-closer')[0], function () {
+	                return _this2.hide();
+	            });
+
+	            this.resetEvents();
+	            this.attachLanguageSwitch(this.elem);
+	            this.shown = true;
+	        }
+	    }, {
+	        key: 'hide',
+	        value: function hide() {
+	            if (!this.elem) return;
+	            this.overlay.toggleOverlay(false);
+	            this.overlay.toggleAttention(false);
+
+	            this.shown = false;
+	            this.elem.parentNode.removeChild(this.elem);
+	            this.elem = null;
+	        }
+
+	        //agent will inject the overlay for us
+
+	    }], [{
+	        key: 'needsOverlay',
+	        get: function get() {
+	            return true;
+	        }
+	    }]);
+
+	    return Lightbox;
+	}(LanguageSelector);
+
+	window.Trex.language_selectors['lightbox'] = module.exports = Lightbox;
+
+/***/ },
+
+/***/ 22:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var template = __webpack_require__(23);
+	var utils = {
+	    extend: function extend(m) {
+	        var i,
+	            a = function a(d, s, m) {
+	            for (var k in s) {
+	                if (hasOwnProperty.call(s, k)) m && k in d && _typeof(d[k]) == 'object' && _typeof(s[k]) == 'object' ? a(d[k], s[k], m) : d[k] = s[k];
+	            }return d;
+	        };
+	        var d = arguments[m === true ? 1 : 0];
+	        for (i = 1; i < arguments.length; i++) {
+	            d = a(d, arguments[i], m === true);
+	        }return d;
+	    },
+	    addEvent: function addEvent(evnt, elem, func) {
+	        if (elem.addEventListener) elem.addEventListener(evnt, func, false);else if (elem.attachEvent) elem.attachEvent('on' + evnt, func);else elem[evnt] = func;
+	    },
+	    hasClass: function hasClass(elem, cls) {
+	        return elem.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+	    },
+	    addClass: function addClass(elem, cls) {
+	        if (!utils.hasClass(elem, cls)) elem.className += ' ' + cls;
+	    },
+
+	    removeClass: function removeClass(elem, cls) {
+	        if (utils.hasClass(elem, cls)) {
+	            var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+	            elem.className = elem.className.replace(reg, ' ');
+	        }
+	    },
+	    toggleClass: function toggleClass(elem, cls) {
+	        if (!utils.hasClass(elem, cls)) addClass(elem, cls);else removeClass(elem, cls);
+	    }
+	};
+
+	var tween = function tween(from, to, duration, easing, step, done) {
+	    var index = 0;
+	    var c = to - from;
+	    var fn = function fn() {
+	        step && step(easing(index, from, c, duration));
+	        index++;
+	        index <= duration ? window.setTimeout(fn, c) : done && done();
+	    };
+	    window.setTimeout(fn, c);
+	};
+
+	tween.easings = {
+	    linear: function linear(t, b, c, d) {
+	        return c * t / d + b;
+	    },
+
+	    easInQuad: function easInQuad(t, b, c, d) {
+	        t /= d;
+	        return c * t * t + b;
+	    },
+
+	    easOutQuad: function easOutQuad(t, b, c, d) {
+	        t /= d;
+	        return -c * t * (t - 2) + b;
+	    },
+
+	    easeInOutQuad: function easeInOutQuad(t, b, c, d) {
+	        t /= d / 2;
+	        if (t < 1) return c / 2 * t * t + b;
+	        t--;
+	        return -c / 2 * (t * (t - 2) - 1) + b;
+	    },
+
+	    easeInCubic: function easeInCubic(t, b, c, d) {
+	        t /= d;
+	        return c * t * t * t + b;
+	    },
+
+	    easeOutCubic: function easeOutCubic(t, b, c, d) {
+	        t /= d;
+	        t--;
+	        return c * (t * t * t + 1) + b;
+	    },
+
+	    easeInOutCubic: function easeInOutCubic(t, b, c, d) {
+	        t /= d / 2;
+	        if (t < 1) return c / 2 * t * t * t + b;
+	        t -= 2;
+	        return c / 2 * (t * t * t + 2) + b;
+	    }
+	};
+
+	window.Trex.language_selectors = window.Trex.language_selectors || {};
+
+	window.Trex.language_selectors['lightbox'] = module.exports = function () {
+	    function LanguageSelector(elem, props) {
+	        _classCallCheck(this, LanguageSelector);
+
+	        var self = this;
+	        this.tween = tween;
+	        this.utils = utils;
+	        this.name = 'lightbox';
+	        props = this.utils.extend(props || { opts: {} }, this.defaultParams || {});
+	        this.props = props;
+	        this.elem = elem;
+	        if (template) this.template = template;
+
+	        if (window.tml) {
+	            window.tml.on('language-change', this.handleLanguageChange.bind(this));
+	        }
+	    }
+
+	    _createClass(LanguageSelector, [{
+	        key: 'runTemplate',
+	        value: function runTemplate() {
+	            this.props.opts.inline = Trex.auth.isInlineEnabled();
+	            this.elem.innerHTML = this.template(this.props);
+	            this.elem.classList.add('notranslate');
+	            this.attachLanguageSwitch(this.elem);
+	        }
+	    }, {
+	        key: 'resetEvents',
+	        value: function resetEvents() {
+	            this.events = {};
+	        }
+	    }, {
+	        key: 'addEvent',
+	        value: function addEvent(event, key, target, callback) {
+	            this.events = this.events || {};
+	            this.events[key] = this.events[key] || {};
+
+	            if (this.events[key][event]) return false;
+
+	            this.events[key][event] = true;
+	            this.utils.addEvent(event, target, callback);
+	            return true;
+	        }
+	    }, {
+	        key: 'attachLanguageSwitch',
+	        value: function attachLanguageSwitch(elem) {
+	            var _this = this;
+
+	            this.addEvent('click', 'language_switch', elem, function (e) {
+	                var clickElem = e.target;
+	                var found;
+
+	                while (clickElem && !(found = clickElem.getAttribute && clickElem.getAttribute('data-tml-language-toggle') != null)) {
+	                    clickElem = clickElem.parentNode;
+	                }
+
+	                if (found) {
+	                    var locale = clickElem.getAttribute('data-tml-locale');
+	                    if (!locale) return;
+
+	                    e.preventDefault();
+	                    e.stopPropagation();
+
+	                    Trex.switchLanguage(locale);
+	                    if (!window.tml) {
+	                        //fake event trigger
+	                        _this.handleLanguageChange({ locale: locale });
+	                    }
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'handleLanguageChange',
+	        value: function handleLanguageChange(newLang) {
+	            this.props.opts.current_language = newLang;
+	            if (this.hide) {
+	                this.hide();
+	            } else {
+	                this.runTemplate();
+	                if (this.close) {
+	                    setTimeout(this.close.bind(this), 0);
+	                }
+	            }
+	        }
+	    }], [{
+	        key: 'needsOverlay',
+	        get: function get() {
+	            return false;
+	        }
+	    }]);
+
+	    return LanguageSelector;
+	}();
+
+/***/ },
+
+/***/ 23:
+/***/ function(module, exports, __webpack_require__) {
+
+	var jade = __webpack_require__(5);
+
+	module.exports = function template(locals) {
+	var buf = [];
+	var jade_mixins = {};
+	var jade_interp;
+	;var locals_for_with = (locals || {});(function (JSON, app, languages, opts, undefined) {
+	jade_mixins["language"] = jade_interp = function(language, opts){
+	var block = (this && this.block), attributes = (this && this.attributes) || {};
+	if (opts.flag)
+	{
+	buf.push("<img" + (jade.attr("src", language.flag_url, true, true)) + " style=\"margin-right:8px;\"" + (jade.attr("alt", language.english_name, true, true)) + (jade.attr("title", language.english_name, true, true)) + ">");
+	}
+	if (opts.name !== false && opts.language !== 'none')
+	{
+	buf.push(null == (jade_interp = (opts.language == 'native' ? language.native_name : language.english_name)) ? "" : jade_interp);
+	}
+	};
+	var class_name = opts.class_name || 'lightbox open dropdown';
+	var styles = opts.style || '';
+	var langName = opts.language || 'english';
+	var toggle = (opts.toggle === undefined) ? true : JSON.parse(opts.toggle);
+	var toggle_label = opts.toggle_label || 'Help Us Translate';
+	var toggle_label_cancel = opts.toggle_label_cancel || 'Disable translation mode';
+	var powered_by = (opts.poweredBy === false || opts.poweredBy === 'false' ? false : true);
+	buf.push("<style>.lightbox-ls\n{\n    z-index: 999997 !important;\n    background-color: white !important;\n    padding: 0 !important;\n    position: fixed !important;\n    min-width: 400px !important;\n    margin: 0 auto !important;\n    top: 50% !important;\n    transform: translate(-50%, -50%) !important;\n    left: 50% !important;\n    border-radius: 5px !important;\n    box-shadow: 0 6px 13px 0 rgba(0,0,0,.23) !important;\n}\n.lightbox-ls .inner {\n    border-radius: 5px !important;\n}\n.lightbox-ls .inner .bd .my-scroll {\n    margin-top:2px !important;\n    margin-bottom: 5px !important;\n    max-height: 160px !important;\n    overflow: auto !important;\n    border:solid 1px #e8e8e8 !important;\n    padding:5px !important;\n    background-color:white !important;\n}\n.lightbox-ls .inner .bd .text-block{\n    margin-top:2px !important;\n    margin-bottom: 5px !important;\n\n}\n.lightbox-ls .inner .bd ul li:not(:last-of-type) {\n    border-bottom: solid 1px #eee;\n}\n\n\n.lightbox-ls .inner .bd ul li:hover {\n    background: #F1F5FF !important;\n}\n.lightbox-ls .inner .bd ul li small{\n    font-size: 10px !important;\n    color: #A9AFB8 !important;\n    margin-left: 3px !important;\n}\n.lightbox-ls .inner .bd ul li {\n    background: white !important;\n    font-size: 12px !important;\n    font-family: \"Proxima Nova\", \"Helvetica Neue\", sans-serif !important;\n    margin-bottom: -1px !important;\n    margin: 0px !important;\n    padding: 5px !important;\n    cursor: pointer !important;\n}\n.lightbox-ls .inner .bd ul {\n    overflow: hidden !important;\n    list-style-type: none !important;\n    margin: 0px !important;\n    padding: 0px !important;\n}\n.lightbox-ls .inner .bd .inline-mode {\n    margin-top: 8px !important;\n    font-size: 10px !important;\n    padding-left: 18px !important;\n    background-position: 2px 2px !important;\n    background-repeat: no-repeat !important;\n    background-image: url('data:image/png;base64,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') !important;\n    background-size: 14px 14px !important;\n}\n.lightbox-ls .inner .bd .inline-mode p {\n    color: #888 !important;\n}\n.lightbox-ls .inner .bd {\n    padding: 10px !important;\n}\n.lightbox-ls .inner .hd a {\n    text-decoration: none !important;\n    font-name: \"Proxima Nova\", \"Helvetica Neue\", sans-serif !important;\n    cursor: pointer !important;\n}\n.lightbox-ls .inner .hd {\n    background-color: white !important;\n    padding: 10px !important;\n    border-bottom: 1px dotted #ccc !important;\n    font-size: 12px !important;\n    font-weight: bold !important;\n    border-top-left-radius: 5px !important;\n    border-top-right-radius: 5px !important;\n}\n.lightbox-ls .inner {\n    height: 100% !important;\n    background-color: #f8f7f6 !important;\n    position: relative !important;\n}\n.powered-by {\n    background-color: white !important;\n    text-align: center !important;\n    height: 30px !important;\n    line-height: 30px !important;\n    width: 100% !important;\n    color: #eee !important;\n    font-size:10px !important;\n    border-bottom-left-radius: 5px !important;\n    border-bottom-right-radius: 5px !important;\n}\n.powered-by a {\n    color: #ccc !important;\n    padding-left: 16px !important;\n    margin-top: 12px !important;\n    margin-left: 9px !important;\n    padding-bottom: 15px !important;\n    background-repeat: no-repeat !important;\n    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AIcFSEkEO6azAAAA7pJREFUaN7tmk1oHGUYx3/PzM5uNik12W4S9SToxYsIvbXmVARBQbBaaALBRLSFFD9IalJs9dCNpdoIgtFUqVXTRryIl/p18uIth4gHMRTvdT9aQpvNTnbex0NyCOpmZ7PjpDPO/zbsO+z7e5+v933nERpo4sxsF/Ak8ASQAZS7WwLUgO+BaxfOjt1pNOgfGj89mxVhDhgmmvpCleMzhbHq33+w/nUVhMciDAswvMmAL2BggOhroBXgVAyAU60AawyAtRXg2CoBjruCSk4usP4fz9UGOnYbWDd3Nt8B1RCMcwB4BujaFWDP8xZd13119sLEchjuOH76g89FJAMcCT2G19aqlIs3fl3+/bc/woq/mcKJKrAUuku7bo2b5RLGGC/X0+OFnHe8zVCSUIDX111Kf95AdaOuW1a0En1LwOtujeIW2PiWJYHa2hqVUjHSsL6ARYRqdZVblTLGmHjvtLbCep5HHGQ1Kz1xgt3WpV23RqVUjIUbNwWurt7h1s1K7GAbApdLRUSEOMpqlKyS83ACnAAnwAlwApwAJ8AJcAKcACfAgQJH7aDRLvBe27Y7Q57zHnZ4J93wPNyCBjzPOzw0OvWtMcbdtPjawuXzrp+Xjz7/ehZw/Iyt1+t2X/99j7DRVcRuAd+vqu+q6nPAbcAAC8C1Zi8OjU7tN8a8BOz180cd2azjOM6jwIO7CQzQBzy15XmpGfDR0amHjOr7wEFfcWdZdHfnSDlO25MNunnFsPHtZzvL9qvqnKr6ghXLIt/bj5NOBzLBULt1BkcmO1X1oqoe8gcr9PXdG4hlQ6/DgyOTDiIfqerTfi3b2xssbGjAQy++kQbeU2OG8dESZdk2+XxfYG7sBziw3cTIsTOO1usFVT2Bj++6dipFLrePTKbtdg7xDyxSCwL2+CvTds1131LVk34W0rZtuntydGQ70fZ741Z9A4vIj0EAr6ysTG6BberGPbk82WxnUJ9kf/ANbIksisibbSapk6o6DaT9xmymoyMo2FOqutRSrA69cMpR1YdV9SCqqc36+gCwncWMiEwYkTlRPYLqPc2SlKqS25ens2tPEDFbBX5WZXmmMFZvOzkNjk7tV2MWtxniicjLC5fPfxiX01KzBfrmboYNug5/9eVn7zz7f7nxmLcdZyQKFwAB7KXlimVZr135ZLoaBeB2Lfy1ZdvjVz89V47KFU87Fv5JbPvY1Utvl4iQdmrhX1Lp9OGFS+ciBbvTsnQ9lck8Pv9xoUIE1ZJLi0jFsu1D8xfPFomo/gKTxkWDVjqffwAAAABJRU5ErkJggg==) !important;\n    background-size: 12px 12px !important;\n}\n\n</style><div dir=\"ltr\" class=\"inner notranslate\"><div class=\"hd\"><div style=\"float:right;\"><a class=\"tml-closer\">X</a></div><div style=\"padding-top:3px\">Change Language</div></div><div class=\"bd\"><div class=\"my-scroll\"><ul role=\"menu\"" + (jade.cls([class_name], [true])) + ">");
+	// iterate languages.filter(opts.filterer)
+	;(function(){
+	  var $$obj = languages.filter(opts.filterer);
+	  if ('number' == typeof $$obj.length) {
+
+	    for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+	      var lang = $$obj[$index];
+
+	buf.push("<li role=\"presentation\"" + (jade.attr("data-tml-locale", lang.locale, true, true)) + " data-tml-language-toggle>");
+	if (opts.current_language.locale == lang.locale)
+	{
+	buf.push("<div style=\"right: 5px;font-weight: bold;font-size: 16px;margin: 0px 5px 0px 0px;color: #13CF80;position: absolute;\">✓</div>");
+	}
+	jade_mixins["language"](lang, {flag: true, language: 'english', app: app});
+	if (opts.show_native)
+	{
+	buf.push("<small>");
+	jade_mixins["language"](lang, {flag: false, language: 'native', app: app});
+	buf.push("</small>");
+	}
+	buf.push("</li>");
+	    }
+
+	  } else {
+	    var $$l = 0;
+	    for (var $index in $$obj) {
+	      $$l++;      var lang = $$obj[$index];
+
+	buf.push("<li role=\"presentation\"" + (jade.attr("data-tml-locale", lang.locale, true, true)) + " data-tml-language-toggle>");
+	if (opts.current_language.locale == lang.locale)
+	{
+	buf.push("<div style=\"right: 5px;font-weight: bold;font-size: 16px;margin: 0px 5px 0px 0px;color: #13CF80;position: absolute;\">✓</div>");
+	}
+	jade_mixins["language"](lang, {flag: true, language: 'english', app: app});
+	if (opts.show_native)
+	{
+	buf.push("<small>");
+	jade_mixins["language"](lang, {flag: false, language: 'native', app: app});
+	buf.push("</small>");
+	}
+	buf.push("</li>");
+	    }
+
+	  }
+	}).call(this);
+
+	buf.push("</ul></div><div class=\"text-block\"><div class=\"inline-mode\"><a href=\"#\" onclick=\"Trex.toggleTranslationMode(); return false\" style=\"padding: 5px;\">" + (jade.escape(null == (jade_interp = opts.inline ? 'Deactivate Translation Mode' : 'Activate Translation Mode') ? "" : jade_interp)) + "</a><p style=\"padding: 0 5px;\"><strong>" + (jade.escape(null == (jade_interp = 'Right-mouse-click') ? "" : jade_interp)) + "</strong>" + (jade.escape(null == (jade_interp = ' or ') ? "" : jade_interp)) + "<strong>" + (jade.escape(null == (jade_interp = 'ctrl+click') ? "" : jade_interp)) + "</strong>" + (jade.escape(null == (jade_interp = ' on any label to suggest or verify translations') ? "" : jade_interp)) + "</p></div></div></div></div>");
+	if (powered_by)
+	{
+	buf.push("<div class=\"powered-by\"><a href=\"http://translationexchange.com\" target=\"_blank\">Powered By Translation Exchange</a></div>");
+	}}.call(this,"JSON" in locals_for_with?locals_for_with.JSON:typeof JSON!=="undefined"?JSON:undefined,"app" in locals_for_with?locals_for_with.app:typeof app!=="undefined"?app:undefined,"languages" in locals_for_with?locals_for_with.languages:typeof languages!=="undefined"?languages:undefined,"opts" in locals_for_with?locals_for_with.opts:typeof opts!=="undefined"?opts:undefined,"undefined" in locals_for_with?locals_for_with.undefined: false?undefined:undefined));;return buf.join("");
+	}
+
+/***/ }
+
+/******/ });

@@ -1,0 +1,21 @@
+CREATE TABLE patch_notes(
+	pid INT PRIMARY KEY AUTO_INCREMENT,
+	pimg VARCHAR(256),
+	purl VARCHAR(256),
+	ptitle VARCHAR(64),
+	pdc VARCHAR(256)
+);
+CREATE TABLE dev_blog(
+	did INT PRIMARY KEY AUTO_INCREMENT,
+	dimg VARCHAR(256),
+	durl VARCHAR(256),
+	dtitle VARCHAR(64),
+	ddc VARCHAR(256)
+);
+CREATE TABLE news(
+    nid INT PRIMARY KEY AUTO_INCREMENT,
+    ntitle VARCHAR(128),
+    ntype VARCHAR(64),
+    ntime BIGINT,
+    ndetail TEXT
+)

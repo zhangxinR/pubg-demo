@@ -1,0 +1,337 @@
+;
+(function($) {
+
+    // input placeholder
+    function inputPlaceholder() {
+        $('.input_text').each(function() {
+            var $inputText = $(this);
+            var $input = $inputText.find('input');
+            var $placeHolder = $inputText.find('label');
+
+            $input.on({
+                focus: function() {
+                    $(this).siblings('label').addClass('blind');
+                },
+                blur: function() {
+                    if ($(this).val() == '') {
+                        $placeHolder.removeClass('blind');
+                    } else {
+                        $(this).siblings('label').addClass('blind');
+                    }
+                }
+            });
+        });
+    }
+
+    function inputPlaceholder2() {
+        $('.input_textarea').each(function() {
+            var $inputTextarea = $(this);
+            var $inputarea = $inputTextarea.find('textarea');
+            var $placeHolder = $inputarea.find('label');
+
+            $inputarea.on({
+                focus: function() {
+                    $(this).siblings('label').addClass('blind');
+                },
+                blur: function() {
+                    if ($(this).val() == '') {
+                        $placeHolder.removeClass('blind');
+                    } else {
+                        $(this).siblings('label').addClass('blind');
+                    }
+                }
+            });
+        });
+    }
+
+    function inputSelect() {
+        $('.input_select').each(function() {
+            var $inputSelect = $(this);
+            var $select = $inputSelect.find('select');
+            var $errorText = $inputSelect.find('.err_txt');
+
+            $select.on({
+                click: function() {
+                    if ($inputSelect.hasClass('active')) {
+                        $inputSelect.removeClass('active');
+                    } else {
+                        $inputSelect.addClass('active');
+                    }
+                },
+                blur: function() {
+                    $inputSelect.removeClass('active');
+                }
+            });
+        });
+    }
+
+    function featuredlst() {
+        var featuredWrap = $('.featured_contents_area'),
+            contentlstWrap = featuredWrap.find('.featured_lst'),
+            contentlst = contentlstWrap.find('.box');
+        if(contentlst.length === 1){
+            featuredWrap.addClass('single');
+        }
+    };
+
+    // $.fn.followMe = function() {
+    //     return this.each(function() {
+    //         var aside = $(this),
+    //             requirementsSection = $('.requirements_area'),
+    //             benefitSection = $('.benefit_area'),
+    //             applySection = $('.application_area'),
+    //             asideTop = $('.btn_top');
+
+    //         function quickMenuActive() {
+    //             var currentScrollTop = $(this).scrollTop(),
+    //                 requirementsOffsetTop = requirementsSection.offset().top,
+    //                 benefitOffsetTop = benefitSection.offset().top,
+    //                 applyOffsetTop = applySection.offset().top,
+    //                 memberOffsetTop = $('.member_wrap').offset().top,
+    //                 headerHeight;
+    //             if ($('#header').hasClass('up')) {
+    //                 headerHeight = 60;
+    //             } else {
+    //                 headerHeight = 111;
+    //             }
+    //             if (currentScrollTop >= 0) {
+    //                 aside.stop().animate({
+    //                     top: currentScrollTop + 450
+    //                 }, {
+    //                     'easing': 'linear',
+    //                     duration: 500,
+    //                     complete: function() {
+    //                         if (currentScrollTop >= 0 && currentScrollTop < requirementsOffsetTop - 300) {
+    //                             aside.find('a').removeClass('active');
+    //                             aside.find('li').eq(3).find('a').addClass('active');
+    //                         } else if (currentScrollTop > requirementsOffsetTop - 300 && currentScrollTop < benefitOffsetTop - 300) {
+    //                             aside.find('a').removeClass('active');
+    //                             aside.find('li').eq(0).find('a').addClass('active');
+    //                         } else if (currentScrollTop > benefitOffsetTop - 300 && currentScrollTop < applyOffsetTop - 300) {
+    //                             aside.find('a').removeClass('active');
+    //                             aside.find('li').eq(1).find('a').addClass('active');
+    //                         } else if (currentScrollTop > applyOffsetTop - 300 && currentScrollTop < memberOffsetTop - 300) {
+    //                             aside.find('a').removeClass('active');
+    //                             aside.find('li').eq(2).find('a').addClass('active');
+    //                         } else {
+    //                             aside.find('a').removeClass('active');
+    //                         }
+    //                     }
+    //                 });
+    //             } else {
+    //                 aside.stop().animate({
+    //                     top: currentScrollTop + $('#header').height() + 400
+    //                 }, {
+    //                     'easing': 'linear',
+    //                     duration: 500
+    //                 });
+    //             }
+    //         }
+    //         quickMenuActive();
+
+    //         $(window).scroll(function() {
+    //             quickMenuActive();
+    //         });
+
+    //         asideTop.on({
+    //             click: function(e) {
+    //                 e.preventDefault();
+    //                 $('body').stop().animate({
+    //                     scrollTop: 0
+    //                 }, {
+    //                     duration: 500,
+    //                     "easing": "linear"
+    //                 });
+    //             }
+    //         });
+
+    //         aside.find('li').on({
+    //             click: function() {
+    //                 var thisIdx = $(this).index(),
+    //                     headerHeight;
+    //                 if ($('#header').hasClass('up')) {
+    //                     headerHeight = 60;
+    //                 } else {
+    //                     headerHeight = 111;
+    //                 }
+    //                 switch (thisIdx) {
+    //                     case 0:
+    //                         var offsetTop = requirementsSection.offset().top;
+    //                         $('body').stop().animate({
+    //                             scrollTop: offsetTop - 111
+    //                         });
+    //                         break;
+    //                     case 1:
+    //                         offsetTop = benefitSection.offset().top;
+    //                         $('body').stop().animate({
+    //                             scrollTop: offsetTop - 111
+    //                         });
+    //                         break;
+    //                     case 2:
+    //                         offsetTop = applySection.offset().top;
+    //                         $('body').stop().animate({
+    //                             scrollTop: offsetTop - 111
+    //                         });
+    //                         break
+    //                 }
+    //             }
+    //         });
+    //     });
+    // };
+
+    // header sticky
+    var gnb = function() {
+        var prev_ScrollTopValue = 0,
+            header = $('#header'),
+            headerHeight = header.find('.top_wrap').height(),
+            isItMove = true;
+
+        $(window).scroll(function() {
+            var currentScrollTop = $(window).scrollTop();
+
+            if (currentScrollTop > headerHeight && currentScrollTop > prev_ScrollTopValue) { // scroll down
+                if (isItMove) {
+                    isItMove = false;
+                    $('#header').removeClass('up');
+                    $('.trex-language-selector').removeClass('trex-open');
+                    $('#header').addClass('sticky');
+                    if (currentScrollTop < 100) {
+                        $('#header').stop().animate({
+                            top: -51 + 'px'
+                        }, {
+                            'easing': 'easeInOutQuart',
+                            duration: 0,
+                            complete: function() {
+                                isItMove = true;
+                            }
+                        });
+                    } else {
+                        $('#header').stop().animate({
+                            top: -51 + 'px'
+                        }, {
+                            'easing': 'easeInOutQuart',
+                            duration: 300,
+                            complete: function() {
+                                isItMove = true;
+                            }
+                        });
+                    }
+                }
+            } else if (currentScrollTop > headerHeight && currentScrollTop < prev_ScrollTopValue) { // scroll up
+                if (isItMove) {
+                    isItMove = false;
+                    $('#header').addClass('up');
+                    $('#header').stop().animate({
+                        top: 0
+                    }, {
+                        'easing': 'easeInOutQuart',
+                        duration: 300,
+                        complete: function() {
+                            isItMove = true;
+                        }
+                    });
+                }
+
+            } else {
+                if (currentScrollTop == 0) {
+                    $('#header').removeClass('sticky up');
+                    $('#header').stop().animate({
+                        top: 0
+                    }, {
+                        'easing': 'easeInOutQuart',
+                        duration: 10,
+                        complete: function() {
+                            isItMove = true;
+                        }
+                    });
+                }
+            }
+            prev_ScrollTopValue = $(window).scrollTop();
+        });
+    };
+
+    // tab
+    $.fn.tab = function() {
+        return this.each(function() {
+            var obj = $(this),
+                tabLi = obj.find('li'),
+                tabButton = tabLi.find('button'),
+                list = $('.tab_cnt');
+            var tab = {
+                init: function() {
+                    tab.bindEvent();
+                },
+                bindEvent: function() {
+                    tabButton.on({
+                        click: function() {
+                            var thisIdx = ($(this).parent('li').index());
+                            tabButton.removeClass('active');
+                            $(this).addClass('active');
+                            list.hide();
+                            list.eq(thisIdx).show();
+                        }
+                    });
+                }
+            };
+            tab.init();
+        });
+    };
+
+    $(window).load(function() {
+        gnb();
+        inputPlaceholder();
+        inputPlaceholder2();
+        inputSelect();
+
+        // $('.quick_menu').followMe();
+
+        if($('.featured_contents_area').length){
+            featuredlst();
+        }
+
+        // 디자인 스크롤바
+        if ($('.scrollbar-inner').length) {
+            $('.scrollbar-inner').scrollbar();
+        }
+
+         // 스와이프
+        if ($('.fade').length) {
+            $('.fade').slick({
+                dots: true,
+                infinite: true,
+                speed: 700,
+                fade: true,
+                cssEase: 'linear',
+                autoplay: true,
+                autoplaySpeed: 2000,
+                pauseOnHover: false
+            });
+        }
+
+        // 스와이프 : 자동롤링 x
+        if ($('.fade2').length) {
+            $('.fade2').slick({
+                infinite: true,
+                speed: 700,
+                fade: true,
+                cssEase: 'linear',
+            });
+        }
+
+        // Tab
+        if ($('.tab').length) {
+            $('.tab').tab();
+        }
+
+        // 멀티 말줄임
+        if ($('.multi_elp').length) {
+            $('.multi_elp').dotdotdot({
+                watch: 'true'
+            });
+        }
+        $('.partners').hide();
+    });
+
+
+
+}(jQuery));
